@@ -6,10 +6,13 @@ import java.util.concurrent.RejectedExecutionHandler;
 
 public class Main {
     public static void main(String[] args) {
-        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(2, 4, 10, TimeUnit.MINUTES, new ArrayBlockingQueue<>(2),
-                new CustomThreadFactory(), new CustomRejectHandler());
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(2, 4, 10, TimeUnit.MINUTES,
+                new ArrayBlockingQueue<>(2), new CustomThreadFactory(), new CustomRejectHandler());
 
-        for(int i=0;i<=10;i++) {
+        for(int i=0;i<=7;i++) {
+
+            final int taskId = i;
+
             threadPoolExecutor.submit(() -> {
                 try {
                     Thread.sleep(5000);
@@ -17,7 +20,7 @@ public class Main {
                 catch (Exception e) {
                     e.printStackTrace();
                 }
-                System.out.println("Task processed by: " + Thread.currentThread().getName());
+                System.out.println("Task id: " + taskId + " Task processed by: " + Thread.currentThread().getName());
             });
         }
         threadPoolExecutor.shutdown();

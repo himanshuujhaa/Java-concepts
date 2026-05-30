@@ -1,23 +1,27 @@
 import java.util.*;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 public class SharedResource {
 
-    int N = 10; // to maintain fixed size
+    int maxCapacity = 5; // to maintain fixed size
+    int N = 10;
 
     boolean produced = false;
 
-    Queue<Integer> queue = new LinkedList<Integer>();
+    BlockingQueue<Integer> queue = new ArrayBlockingQueue<Integer>(maxCapacity);
 
     int num = 1;
     public synchronized void addItem() {
 
         while (num <= N) {
-            while (queue.size() == N) {
+            while (queue.size() == maxCapacity) {
                 try {
                     System.out.println("Queue is full");
                     wait();
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    Thread.currentThread().interrupt();
+                    return;
                 }
             }
             System.out.println("Adding " + num);
